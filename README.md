@@ -203,10 +203,18 @@ Potential features for future versions:
 
 ## License
 
-Created by Luke Steuber
+MIT License - see [LICENSE](LICENSE) file
+
+## Author
+
+**Luke Steuber**
+
+- Website: [lukesteuber.com](https://lukesteuber.com)
+- GitHub: [@lukeslp](https://github.com/lukeslp)
+- Bluesky: [@lukesteuber.com](https://bsky.app/profile/lukesteuber.com)
 
 ## Acknowledgments
 
-- Inspired by the classic Japanese logic puzzle
+- Inspired by the classic Japanese logic puzzle (originated in Japan, 1987)
 - Uses modern web standards for optimal performance
 - Designed with accessibility in mind
