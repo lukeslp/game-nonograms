@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Nonograms / Picross | Logic Puzzle Game</title>
+    <meta name="description" content="Solve nonogram puzzles by filling grids to match row and column number clues. Features smooth drag painting and contradiction detection. 12 puzzles across 4 difficulty levels." />
+    <meta name="keywords" content="nonograms, picross, griddlers, logic puzzle, picture puzzle, paint by numbers, brain game" />
+    <meta name="author" content="Luke Steuber" />
+    <meta name="theme-color" content="#f6f7fb" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Nonograms / Picross - Logic Puzzle Game" />
+    <meta property="og:description" content="Solve logic puzzles by filling grid cells based on number clues. 12 puzzles from easy to expert difficulty." />
+    <meta property="og:image" content="/games/nonograms/social-card.png" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Nonograms / Picross - Logic Puzzle Game" />
+    <meta name="twitter:description" content="Solve logic puzzles by filling grid cells based on number clues. 12 puzzles from easy to expert difficulty." />
+    <meta name="twitter:image" content="/games/nonograms/social-card.png" />
+
+    <link rel="icon" href="/games/nonograms/icon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" id="puzzleStyles" href="/games/nonograms/style.css" data-local="style.css" />
+</head>
+<body>
+    <main class="app-shell">
+        <header class="hero">
+            <div>
+                <p class="eyebrow">Logic puzzle</p>
+                <h1>Nonograms / Picross</h1>
+                <p>Fill the grid so every row and column matches its numbers. Numbers show contiguous blocks of filled squares in the order they must appear.</p>
+            </div>
+        </header>
+        <section class="controls" aria-label="Puzzle controls">
+            <div class="difficulty-filters">
+                <button type="button" class="filter-btn active" data-filter="all" aria-label="Show all puzzles">All</button>
+                <button type="button" class="filter-btn" data-filter="easy" aria-label="Show easy puzzles">Easy</button>
+                <button type="button" class="filter-btn" data-filter="medium" aria-label="Show medium puzzles">Medium</button>
+                <button type="button" class="filter-btn" data-filter="hard" aria-label="Show hard puzzles">Hard</button>
+                <button type="button" class="filter-btn" data-filter="expert" aria-label="Show expert puzzles">Expert</button>
+            </div>
+            <label for="puzzlePicker">
+                Puzzle
+                <select id="puzzlePicker" aria-label="Choose a Nonogram puzzle"></select>
+            </label>
+            <div class="control-buttons">
+                <button type="button" id="resetPuzzle" aria-label="Reset current puzzle">Reset</button>
+                <button type="button" id="newShuffled" aria-label="Load random puzzle">Shuffle</button>
+                <button type="button" id="hintButton" class="hint-btn" aria-label="Get a hint for current puzzle">
+                    <span class="hint-icon" aria-hidden="true">💡</span> Get Hint
+                </button>
+            </div>
+            <label class="checkbox" for="autoMark">
+                <input type="checkbox" id="autoMark" checked aria-describedby="autoMarkDesc" />
+                Auto-mark solved lines
+                <span id="autoMarkDesc" class="visually-hidden">Automatically marks remaining cells in completed rows and columns</span>
+            </label>
+        </section>
+        <section class="stats-bar" aria-label="Puzzle statistics">
+            <div class="stat-item">
+                <span class="stat-label">Time</span>
+                <span class="stat-value" id="timer" aria-live="polite">0:00</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Moves</span>
+                <span class="stat-value" id="moveCounter" aria-live="polite">0</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Hints</span>
+                <span class="stat-value" id="hintCounter" aria-live="polite">0</span>
+            </div>
+            <div class="stat-item" id="bestTimeDisplay" style="display: none;">
+                <span class="stat-label">Best</span>
+                <span class="stat-value" id="bestTime">--</span>
+            </div>
+        </section>
+        <section class="tools" aria-label="Painting tools">
+            <button type="button" class="tool active" data-tool="fill" aria-pressed="true">Fill</button>
+            <button type="button" class="tool" data-tool="mark" aria-pressed="false">Mark Empty</button>
+            <button type="button" class="tool" data-tool="clear" aria-pressed="false">Clear</button>
+        </section>
+        <section class="puzzle-shell">
+            <div class="corner" aria-hidden="true">
+                <p id="statusLine">Drag to paint. Auto-marking keeps contradictions obvious.</p>
+            </div>
+            <div class="column-hints" id="columnHints" aria-label="Column hints"></div>
+            <div class="row-hints" id="rowHints" aria-label="Row hints"></div>
+            <div class="grid" id="grid" role="grid" aria-label="Nonogram grid"></div>
+        </section>
+        <section class="legend">
+            <span class="legend-item filled">Filled</span>
+            <span class="legend-item marked">Empty</span>
+            <span class="legend-item contradiction">Contradiction</span>
+        </section>
+        <section class="achievements-panel" id="achievementsPanel" style="display: none;" aria-live="assertive" role="alert">
+            <h3>Achievements Unlocked!</h3>
+            <div id="achievementsList"></div>
+        </section>
+        <section class="progress-summary">
+            <h3>Your Progress</h3>
+            <div class="progress-grid">
+                <div class="progress-item">
+                    <span class="progress-label">Puzzles Solved</span>
+                    <span class="progress-value" id="totalSolved">0</span>
+                </div>
+                <div class="progress-item">
+                    <span class="progress-label">Perfect Solves</span>
+                    <span class="progress-value" id="perfectSolves">0</span>
+                </div>
+                <div class="progress-item">
+                    <span class="progress-label">Total Time</span>
+                    <span class="progress-value" id="totalTime">0:00</span>
+                </div>
+                <div class="progress-item">
+                    <span class="progress-label">Daily Streak</span>
+                    <span class="progress-value" id="dailyStreak"><span aria-hidden="true">0 🔥</span><span class="visually-hidden">0 days</span></span>
+                </div>
+            </div>
+            <button type="button" id="dailyPuzzleBtn" class="daily-puzzle-btn" aria-label="Play today's daily puzzle">
+                Today's Puzzle <span aria-hidden="true">⭐</span>
+            </button>
+        </section>
+    </main>
+    <div id="celebrationOverlay" class="celebration-overlay" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="celebrationTitle">
+        <div class="celebration-content">
+            <h2 id="celebrationTitle">Puzzle Solved!</h2>
+            <div id="celebrationStats"></div>
+            <div id="celebrationAchievements"></div>
+            <button type="button" id="celebrationNext" class="celebration-btn">Next Puzzle</button>
+            <button type="button" id="celebrationClose" class="celebration-btn secondary">Close</button>
+        </div>
+    </div>
+    <script type="module" id="puzzleModule" src="/games/nonograms/app.js" data-local="app.js"></script>
+    <script>
+        if (window.location.protocol === "file:") {
+            const style = document.getElementById("puzzleStyles");
+            if (style && style.dataset.local) {
+                style.href = style.dataset.local;
+            }
+            const moduleScript = document.getElementById("puzzleModule");
+            if (moduleScript && moduleScript.dataset.local) {
+                const fallback = document.createElement("script");
+                fallback.type = "module";
+                fallback.src = moduleScript.dataset.local;
+                document.body.appendChild(fallback);
+                moduleScript.remove();
+            }
+        }
+    </script>
+</body>
+</html>
