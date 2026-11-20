@@ -17,7 +17,7 @@ Nonograms (also known as Picross, Griddlers, or Paint by Numbers) are picture lo
 - **Achievement System** tracks milestones and perfect solves
 - **Daily Puzzle Mode** with streak tracking
 - **Shuffle Button** to randomize puzzle order
-- **Fully Offline** - No server or internet connection required
+- **Works Offline** - No server needed; the hosted page loads a GoatCounter page-view counter, which fails silently offline
 - **Responsive Design** works on desktop, tablet, and mobile devices
 - **Accessibility Features** including ARIA labels and keyboard support
 
@@ -25,7 +25,7 @@ Nonograms (also known as Picross, Griddlers, or Paint by Numbers) are picture lo
 
 ### Getting Started
 
-1. Open `index.html` in a modern web browser (or visit the live version)
+1. Open `index.html` in a modern web browser, or play it at [dr.eamer.dev/games/nonograms/](https://dr.eamer.dev/games/nonograms/)
 2. Select a puzzle from the dropdown menu
 3. Choose your painting tool (Fill, Mark Empty, or Clear)
 4. Click and drag across cells to paint them with your selected tool
@@ -113,10 +113,10 @@ Nonograms (also known as Picross, Griddlers, or Paint by Numbers) are picture lo
 
 Works in all modern browsers with ES6+ support:
 
-- **Chrome/Edge**: 90+ (tested)
-- **Firefox**: 88+ (tested)
-- **Safari**: 14+ (tested)
-- **Opera**: 76+ (tested)
+- **Chrome/Edge**: 90+
+- **Firefox**: 88+
+- **Safari**: 14+
+- **Opera**: 76+
 - **Mobile Browsers**: iOS Safari 14+, Chrome Mobile 90+
 
 ### Required Browser Features
@@ -132,8 +132,8 @@ Works in all modern browsers with ES6+ support:
 ```
 nonograms/
 ├── index.html       # Main game page with semantic HTML5
-├── app.js           # Game logic and state management (~780 lines)
-├── style.css        # Responsive styles with CSS Grid (~312 lines)
+├── app.js           # Game logic and state management (~1,070 lines)
+├── style.css        # Responsive styles with CSS Grid (~930 lines)
 ├── icon.svg         # Game icon
 ├── social-card.png  # Social media preview image
 └── README.md        # This documentation file
